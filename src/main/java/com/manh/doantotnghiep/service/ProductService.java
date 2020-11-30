@@ -1,10 +1,19 @@
 package com.manh.doantotnghiep.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.manh.doantotnghiep.bean.ResultBean;
 
 public interface ProductService {
 
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     * @throws Exception the exception
+     */
     public ResultBean getAll() throws Exception;
+
     /**
      * Gets the products by cate id.
      *
@@ -39,7 +48,7 @@ public interface ProductService {
      * @return the result bean
      * @throws Exception the exception
      */
-    public ResultBean addProduct(String json) throws Exception;
+    public ResultBean addProduct(String json, MultipartFile[] files) throws Exception;
 
     /**
      * Update product.
@@ -48,6 +57,6 @@ public interface ProductService {
      * @return the result bean
      * @throws Exception the exception
      */
-    public ResultBean updateProduct(String json) throws Exception;
+    public ResultBean updateProduct(String json, MultipartFile[] files) throws Exception;
 
 }

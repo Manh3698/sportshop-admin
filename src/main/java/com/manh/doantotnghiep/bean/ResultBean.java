@@ -5,10 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResultBean {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
 
     private MetaClass meta;
 
@@ -62,7 +58,6 @@ public class ResultBean {
     public void addError(ErrorBean error) {
         this.errors.add(error);
     }
-
 
 }
 
