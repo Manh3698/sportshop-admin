@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.manh.doantotnghiep.bean.ResultBean;
 import com.manh.doantotnghiep.bean.entity.UserEntity;
 import com.manh.doantotnghiep.config.LogExecutionTime;
@@ -24,6 +25,8 @@ public class UserServiceImpl implements UserService {
     /** The user dao. */
     @Autowired
     private UserDao userDao;
+    
+    private ObjectMapper mapper = new ObjectMapper();
 
     /**
      * Gets the all.
@@ -82,7 +85,8 @@ public class UserServiceImpl implements UserService {
      * @throws Exception the exception
      */
     @Override
-    public ResultBean addUser(UserEntity user) throws Exception {
+    public ResultBean addUser(String json) throws Exception {
+        UserEntity user = updateEntity(json);
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         UserEntity entity = userDao.save(user);
         return new ResultBean(entity, Constants.STATUS_OK, Constants.MSG_OK);
@@ -102,5 +106,9 @@ public class UserServiceImpl implements UserService {
         }
         userDao.deleteById(id);
         return new ResultBean(Constants.STATUS_OK, Constants.MSG_OK);
+    }
+    
+    private UserEntity updateEntity(String json) throws Exception {
+        return mapper.readValue(json, UserEntity.class);
     }
 }

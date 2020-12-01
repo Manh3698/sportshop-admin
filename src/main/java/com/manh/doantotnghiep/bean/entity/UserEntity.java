@@ -59,6 +59,40 @@ public class UserEntity extends CommonEntity implements Serializable {
 
     @Column(name = "id_role")
     private Integer idRole;
+    
+    public UserEntity() {
+    }
+
+    public UserEntity(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
+    }
+
+    public UserEntity(String fullname, String address, Date birthday, String email, String phoneNumber, String userName, String password, Integer idRole) {
+        super();
+        this.fullname = fullname;
+        this.address = address;
+        this.birthday = birthday;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.userName = userName;
+        this.password = password;
+        this.idRole = idRole;
+    }
+
+    public UserEntity(Integer id, String fullname, String address, Date birthday, String email, String phoneNumber, String userName, String password,
+            Integer idRole) {
+        super();
+        this.id = id;
+        this.fullname = fullname;
+        this.address = address;
+        this.birthday = birthday;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.userName = userName;
+        this.password = password;
+        this.idRole = idRole;
+    }
 
     public Integer getId() {
         return id;

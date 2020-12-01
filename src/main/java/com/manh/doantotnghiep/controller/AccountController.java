@@ -1,5 +1,7 @@
 package com.manh.doantotnghiep.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,12 +16,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.manh.doantotnghiep.bean.ResultBean;
 import com.manh.doantotnghiep.bean.entity.UserEntity;
 import com.manh.doantotnghiep.service.UserService;
+import com.manh.doantotnghiep.service.Impl.ProductServiceImpl;
 import com.manh.doantotnghiep.utils.Constants;
 
 @Controller
 @RequestMapping("/api/account")
 public class AccountController {
     private AuthenticationManager authenticationManager;
+    
+    private static final Logger log = LoggerFactory.getLogger(AccountController.class);
     @Autowired
     private UserService userService;
 
@@ -72,11 +77,12 @@ public class AccountController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<ResultBean> addUser(@RequestBody UserEntity user) throws Exception {
+    public ResponseEntity<ResultBean> addUser(@RequestBody String json) throws Exception {
         ResultBean resultBean = null;
         try {
-            resultBean = userService.addUser(user);
+            resultBean = userService.addUser(json);
         } catch (Exception e) {
+            log.error(e.getMessage());
             resultBean = new ResultBean(Constants.STATUS_BAD_REQUEST, e.getMessage());
             return new ResponseEntity<ResultBean>(resultBean, HttpStatus.BAD_REQUEST);
         }
