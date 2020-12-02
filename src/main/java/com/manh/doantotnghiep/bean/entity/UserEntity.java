@@ -2,12 +2,18 @@ package com.manh.doantotnghiep.bean.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -52,36 +58,38 @@ public class UserEntity extends CommonEntity implements Serializable {
     private String phoneNumber;
 
     @Column(name = "user_name")
-    private String userName;
+    private String username;
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "id_role")
-    private Integer idRole;
-    
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<RoleEntity> roles;
+
+    public void setRoles(Set<RoleEntity> roles) {
+        this.roles = roles;
+    }
     public UserEntity() {
     }
 
-    public UserEntity(String userName, String password) {
-        this.userName = userName;
+    public UserEntity(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 
-    public UserEntity(String fullname, String address, Date birthday, String email, String phoneNumber, String userName, String password, Integer idRole) {
+    public UserEntity(String fullname, String address, Date birthday, String email, String phoneNumber, String username, String password) {
         super();
         this.fullname = fullname;
         this.address = address;
         this.birthday = birthday;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.userName = userName;
+        this.username = username;
         this.password = password;
-        this.idRole = idRole;
     }
 
-    public UserEntity(Integer id, String fullname, String address, Date birthday, String email, String phoneNumber, String userName, String password,
-            Integer idRole) {
+    public UserEntity(Integer id, String fullname, String address, Date birthday, String email, String phoneNumber, String username, String password) {
         super();
         this.id = id;
         this.fullname = fullname;
@@ -89,11 +97,14 @@ public class UserEntity extends CommonEntity implements Serializable {
         this.birthday = birthday;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.userName = userName;
+        this.username = username;
         this.password = password;
-        this.idRole = idRole;
     }
 
+
+    public Set<RoleEntity> getRoles() {
+        return roles;
+    }
     public Integer getId() {
         return id;
     }
@@ -142,12 +153,12 @@ public class UserEntity extends CommonEntity implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -156,13 +167,5 @@ public class UserEntity extends CommonEntity implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Integer getIdRole() {
-        return idRole;
-    }
-
-    public void setIdRole(Integer idRole) {
-        this.idRole = idRole;
     }
 }

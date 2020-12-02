@@ -11,8 +11,12 @@ public interface UserService {
 
     public ResultBean updateUser(UserEntity user) throws Exception;
 
-    public ResultBean addUser(String json) throws Exception;
+    public ResultBean addUser(UserEntity json) throws Exception;
 
     public ResultBean deleteUserbyId(Integer id) throws Exception;
+    
+   public ResultBean getUserByUsername(String username) throws Exception;
+    
+    public boolean isExitsUserName(String userName) throws Exception;
 
 }

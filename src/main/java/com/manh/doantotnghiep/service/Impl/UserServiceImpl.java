@@ -85,8 +85,7 @@ public class UserServiceImpl implements UserService {
      * @throws Exception the exception
      */
     @Override
-    public ResultBean addUser(String json) throws Exception {
-        UserEntity user = updateEntity(json);
+    public ResultBean addUser(UserEntity user) throws Exception {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         UserEntity entity = userDao.save(user);
         return new ResultBean(entity, Constants.STATUS_OK, Constants.MSG_OK);
@@ -110,5 +109,20 @@ public class UserServiceImpl implements UserService {
     
     private UserEntity updateEntity(String json) throws Exception {
         return mapper.readValue(json, UserEntity.class);
+    }
+    
+    @Override
+    public boolean isExitsUserName(String userName) throws Exception {
+        return userDao.findByUsername(userName).isPresent();
+    }
+
+    @Override
+    public ResultBean getUserByUsername(String username) throws Exception {
+        Optional<UserEntity> userOp = userDao.findByUsername(username);
+        if(!userOp.isPresent()) {
+            throw new Exception("User by username " + username + " does not exist!");
+        }
+        UserEntity user = userOp.get();
+        return new ResultBean(user, Constants.STATUS_OK, Constants.MSG_OK);
     }
 }
