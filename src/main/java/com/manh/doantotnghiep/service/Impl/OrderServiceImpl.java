@@ -82,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
     public ResultBean addOrder(OrderEntity order, List<OrderDetailEntity> orderDetails) throws Exception {
         orderDao.save(order);
         for (OrderDetailEntity orderDetail : orderDetails) {
-            orderDetail.setOrderId(order.getId());
+            orderDetail.setOrder(order);
             orderDetailDao.save(orderDetail);
         }
         return new ResultBean(Constants.STATUS_201, Constants.MSG_OK);

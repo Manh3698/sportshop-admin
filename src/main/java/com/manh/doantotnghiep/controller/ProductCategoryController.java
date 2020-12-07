@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,6 +53,7 @@ public class ProductCategoryController {
      * @return the all product cate by id
      * @throws Exception the exception
      */
+
     @RequestMapping(value = "/getById/{id}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<ResultBean> getAllProductCateById(@PathVariable Integer id) throws Exception {
         ResultBean resultBean = null;
@@ -71,6 +73,7 @@ public class ProductCategoryController {
      * @return the response entity
      * @throws Exception the exception
      */
+    @PreAuthorize("hasRole('admin')")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE, produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<ResultBean> deteleProductCateById(@PathVariable Integer id) throws Exception {
         ResultBean resultBean = null;
@@ -90,6 +93,7 @@ public class ProductCategoryController {
      * @return the response entity
      * @throws Exception the exception
      */
+    @PreAuthorize("hasRole('admin')")
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<ResultBean> addProductCate(@RequestBody String json) throws Exception {
         ResultBean resultBean = null;
@@ -109,6 +113,7 @@ public class ProductCategoryController {
      * @return the response entity
      * @throws Exception the exception
      */
+    @PreAuthorize("hasRole('admin')")
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<ResultBean> updateProductCate(@RequestBody String json) throws Exception {
         ResultBean resultBean = null;

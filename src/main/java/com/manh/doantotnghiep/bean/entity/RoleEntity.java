@@ -1,24 +1,17 @@
 package com.manh.doantotnghiep.bean.entity;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.Getter;
 import lombok.Setter;
+
+import javax.management.relation.Role;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Setter
-@Getter
 @Table(name = "Roles")
-public class RoleEntity extends CommonEntity implements Serializable {
+public class RoleEntity implements Serializable {
     /**
      * 
      */
@@ -27,12 +20,21 @@ public class RoleEntity extends CommonEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("id")
     private Integer id;
 
     @Column(name = "name")
     @JsonProperty("name")
     private String name;
+
+    public RoleEntity(){
+        super();
+    }
+
+    public RoleEntity(Integer id, String name){
+        super();
+        this.id = id;
+        this.name = name;
+    }
 
     public Integer getId() {
         return id;

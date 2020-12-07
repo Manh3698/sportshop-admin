@@ -1,22 +1,9 @@
 package com.manh.doantotnghiep.bean.entity;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.Getter;
-import lombok.Setter;
-
 @Entity
-@Setter
-@Getter
 @Table(name = "images")
 public class ImageEntity extends CommonEntity implements Serializable {
     /**
@@ -27,40 +14,57 @@ public class ImageEntity extends CommonEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("id")
     private Integer id;
 
-    @Column(name = "image_id")
-    @JsonProperty("image_id")
-    private Integer imageId;
+    @Column(name = "parent_id")
+    private Integer parentId;
 
-    @Column(name = "image_name")
-    @JsonProperty("image_name")
-    private String imageName;
+    @Column(name = "file_name")
+    private String fileName;
 
-    public Integer getId() {
-        return id;
-    }
+    @Column(name = "file_url")
+    private String fileUrl;
+
+    @Column(name = "type")
+    private String type;
 
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public Integer getImageId() {
-        return imageId;
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 
-    public void setImageId(Integer imageId) {
-        this.imageId = imageId;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
-    public String getImageName() {
-        return imageName;
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
     }
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
+    public void setType(String type) {
+        this.type = type;
     }
-    
-    
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public Integer getParentId() {
+        return this.parentId;
+    }
+
+    public String getFileName() {
+        return this.fileName;
+    }
+
+    public String getFileUrl() {
+        return this.fileUrl;
+    }
+
+    public String getType() {
+        return this.type;
+    }
 }

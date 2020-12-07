@@ -1,14 +1,15 @@
 package com.manh.doantotnghiep.bean.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import org.hibernate.annotations.CreationTimestamp;
-
-import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.CreationTimestamp;
+
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import java.io.Serializable;
+import java.util.Date;
 
 
 @MappedSuperclass

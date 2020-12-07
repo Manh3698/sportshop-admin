@@ -137,8 +137,9 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception e) {
             throw new IOException("Save file fail!");
         }
+
         ProductEntity productEntity = updateEntity(json);
-        productEntity.setImage(String.join(",", filesName));
+        productEntity.setImages(String.join(",", filesName));
         productDao.save(productEntity);
         log.info("### End Add Product By Id ###");
         log.info("##########################################");
@@ -166,7 +167,7 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity productDb = productOp.get();
         ProductEntity productEntity = updateEntity(json);
         if(Objects.isNull(files)) {
-            productEntity.setImage(productDb.getImage());
+            productEntity.setImages(productDb.getImages());
         }
         productDao.save(productEntity);
         log.info("### End Update Product By Id ###");

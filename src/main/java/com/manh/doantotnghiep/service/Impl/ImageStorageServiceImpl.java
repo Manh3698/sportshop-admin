@@ -30,7 +30,7 @@ public class ImageStorageServiceImpl implements ImageStorageService {
         long currentTime = System.currentTimeMillis();
         String fileName = file.getOriginalFilename().split("\\.")[0];
         String extension = "." + file.getOriginalFilename().split("\\.")[1];
-        String fileStorePath = fileName + currentTime + extension;
+        String fileStorePath = fileName  + extension;
         Files.copy(file.getInputStream(), dir.resolve(fileStorePath));
         return fileStorePath;
     }

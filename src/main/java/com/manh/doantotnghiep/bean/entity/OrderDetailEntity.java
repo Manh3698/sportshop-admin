@@ -1,23 +1,21 @@
 package com.manh.doantotnghiep.bean.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.criterion.Order;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.Getter;
-import lombok.Setter;
-
+@Data
 @Entity
 @Setter
-@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "order_detail")
 public class OrderDetailEntity extends CommonEntity implements Serializable {
     /**
@@ -35,9 +33,13 @@ public class OrderDetailEntity extends CommonEntity implements Serializable {
     @JsonProperty("product_id")
     private Integer productId;
 
-    @Column(name = "order_id")
-    @JsonProperty("order_id")
-    private Integer orderId;
+//    @Column(name = "order_id")
+//    @JsonProperty("order_id")
+//    private Integer orderId;
+
+    @ManyToOne(fetch =  FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private OrderEntity order;
 
     @Column(name = "quantity")
     @JsonProperty("quantity")
@@ -51,6 +53,13 @@ public class OrderDetailEntity extends CommonEntity implements Serializable {
     @JsonProperty("tatal_price")
     private BigDecimal totalPrice = new BigDecimal(0);
 
+    public  OrderEntity getOrder(){
+        return order;
+    }
+
+    public  void  setOrder(OrderEntity order){
+        this.order = order;
+    }
     public Integer getId() {
         return id;
     }
@@ -67,13 +76,13 @@ public class OrderDetailEntity extends CommonEntity implements Serializable {
         this.productId = productId;
     }
 
-    public Integer getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
-    }
+//    public Integer getOrderId() {
+//        return orderId;
+//    }
+//
+//    public void setOrderId(Integer orderId) {
+//        this.orderId = orderId;
+//    }
 
     public Integer getQuantity() {
         return quantity;

@@ -1,22 +1,12 @@
 package com.manh.doantotnghiep.bean.entity;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.Getter;
 import lombok.Setter;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Setter
-@Getter
 @Table(name ="contacts")
 public class ContactEntity extends CommonEntity implements Serializable {
     /**
@@ -27,24 +17,22 @@ public class ContactEntity extends CommonEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("id")
     private Integer id;
 
-    @Column(name = "username")
-    @JsonProperty("username")
-    private String username;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "phone")
-    @JsonProperty("phone")
-    private Number phone;
+    private String phone;
 
     @Column(name = "email")
-    @JsonProperty("email")
     private String email;
 
-    @Column(name ="description")
-    @JsonProperty("description")
-    private String description;
+    @Column(name ="content")
+    private String content;
+
+    @Column(name = "address")
+    private String address;
 
     public Integer getId() {
         return id;
@@ -54,19 +42,19 @@ public class ContactEntity extends CommonEntity implements Serializable {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Number getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(Number phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
@@ -78,12 +66,12 @@ public class ContactEntity extends CommonEntity implements Serializable {
         this.email = email;
     }
 
-    public String getDescription() {
-        return description;
+    public String getContent() {
+        return content;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setContent(String content) {
+        this.content = content;
     }
     
 }

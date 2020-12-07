@@ -64,43 +64,16 @@ public class UserEntity extends CommonEntity implements Serializable {
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
     private Set<RoleEntity> roles;
 
     public void setRoles(Set<RoleEntity> roles) {
         this.roles = roles;
     }
-    public UserEntity() {
-    }
-
-    public UserEntity(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public UserEntity(String fullname, String address, Date birthday, String email, String phoneNumber, String username, String password) {
-        super();
-        this.fullname = fullname;
-        this.address = address;
-        this.birthday = birthday;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.username = username;
-        this.password = password;
-    }
-
-    public UserEntity(Integer id, String fullname, String address, Date birthday, String email, String phoneNumber, String username, String password) {
-        super();
-        this.id = id;
-        this.fullname = fullname;
-        this.address = address;
-        this.birthday = birthday;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.username = username;
-        this.password = password;
-    }
-
 
     public Set<RoleEntity> getRoles() {
         return roles;

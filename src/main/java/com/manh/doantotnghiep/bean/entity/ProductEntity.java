@@ -1,23 +1,12 @@
 package com.manh.doantotnghiep.bean.entity;
 
+import org.hibernate.annotations.Nationalized;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.Getter;
-import lombok.Setter;
-
 @Entity
-@Setter
-@Getter
 @Table(name = "products")
 public class ProductEntity extends CommonEntity implements Serializable {
 
@@ -30,48 +19,52 @@ public class ProductEntity extends CommonEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("id")
+
     private Integer id;
 
     @Column(name = "name")
-    @JsonProperty("name")
     private String name;
 
-    @Column(name = "image")
-    @JsonProperty("image")
-    private String image;
+    @Column(name = "code")
+    private String code;
+
+    @Column(name = "is_hot")
+    private Boolean isHot;
+
+    @Column(name = "is_new")
+    private Boolean isNew;
+
+    @Column(name = "images", columnDefinition = "nvarchar")
+    @Nationalized
+    private String images;
 
     @Column(name ="new_price")
-    @JsonProperty("new_price")
     private BigDecimal newPrice = new BigDecimal(0);
 
     @Column(name ="old_price")
-    @JsonProperty("old_price")
     private BigDecimal oldPrice = new BigDecimal(0);
 
     @Column(name ="color")
-    @JsonProperty("color")
     private String color;
 
     @Column(name ="category_id")
-    @JsonProperty("category_id")
     private Integer categoryId;
 
     @Column(name ="status")
-    @JsonProperty("status")
     private  String status;
 
     @Column(name ="size")
-    @JsonProperty("size")
     private String size;
 
     @Column(name ="quantity")
-    @JsonProperty("quantity")
     private Integer quantity;
 
     @Column(name ="description")
-    @JsonProperty("description")
     private String description;
+
+    @Column(name ="content", columnDefinition = "nvarchar")
+    @Nationalized
+    private String content;
 
     public Integer getId() {
         return id;
@@ -89,12 +82,12 @@ public class ProductEntity extends CommonEntity implements Serializable {
         this.name = name;
     }
 
-    public String getImage() {
-        return image;
+    public String getImages() {
+        return images;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImages(String images) {
+        this.images = images;
     }
 
     public BigDecimal getNewPrice() {
@@ -159,5 +152,37 @@ public class ProductEntity extends CommonEntity implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getCode() {
+        return this.code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setIsHot(Boolean isHot) {
+        this.isHot = isHot;
+    }
+
+    public Boolean getIsHot() {
+        return isHot;
+    }
+
+    public Boolean getIsNew() {
+        return isNew;
+    }
+
+    public void setNew(Boolean aNew) {
+        isNew = aNew;
     }
 }

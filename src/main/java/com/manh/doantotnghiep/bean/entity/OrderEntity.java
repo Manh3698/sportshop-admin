@@ -1,23 +1,22 @@
 package com.manh.doantotnghiep.bean.entity;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Set;
+
+@Data
 @Entity
 @Setter
-@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "orders")
 public class OrderEntity extends CommonEntity implements Serializable {
     /**
@@ -38,10 +37,6 @@ public class OrderEntity extends CommonEntity implements Serializable {
     @Column(name = "payment_status")
     @JsonProperty("payment_status")
     private String paymentStatus;
-
-    @Column(name = "product_id")
-    @JsonProperty("product_id")
-    private Integer productId;
 
     @Column(name = "total_price")
     @JsonProperty("total_price")
@@ -71,6 +66,17 @@ public class OrderEntity extends CommonEntity implements Serializable {
     @JsonProperty("user_message")
     private String userMessage;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private Collection<OrderDetailEntity> orderDetails;
+
+    public Collection<OrderDetailEntity> getOrderDetails(){
+        return this.orderDetails;
+    }
+
+    public  void setOrderDetailEntity(Collection<OrderDetailEntity> orderDetails){
+        this.orderDetails = orderDetails;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -93,14 +99,6 @@ public class OrderEntity extends CommonEntity implements Serializable {
 
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
-    }
-
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
     }
 
     public BigDecimal getTotalPrice() {

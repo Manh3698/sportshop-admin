@@ -1,8 +1,10 @@
 package com.manh.doantotnghiep.service.Impl;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.manh.doantotnghiep.bean.entity.RoleEntity;
+import com.manh.doantotnghiep.dao.RoleDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,18 +16,24 @@ import com.manh.doantotnghiep.config.LogExecutionTime;
 import com.manh.doantotnghiep.dao.UserDao;
 import com.manh.doantotnghiep.service.UserService;
 import com.manh.doantotnghiep.utils.Constants;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The Class UserServiceImpl.
  */
 @Service
 @LogExecutionTime
+@Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl implements UserService {
 
     /** The user dao. */
     @Autowired
     private UserDao userDao;
-    
+
+    @Autowired
+    private RoleDao roleDao;
+
+
     private ObjectMapper mapper = new ObjectMapper();
 
     /**
@@ -86,6 +94,13 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public ResultBean addUser(UserEntity user) throws Exception {
+        Optional<UserEntity> userDb = userDao.findByUsername(user.getUsername());
+        if (userDb.isPresent()) {
+            throw new Exception("User by user name " + user.getUsername() + " have been exist!");
+        }
+
+       Set<RoleEntity> roles = new HashSet<>(roleDao.findAllById(user.getRoles().stream().map(res -> res.getId()).collect(Collectors.toSet())));
+        user.setRoles(roles);
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         UserEntity entity = userDao.save(user);
         return new ResultBean(entity, Constants.STATUS_OK, Constants.MSG_OK);
