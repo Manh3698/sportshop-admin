@@ -5,15 +5,22 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.manh.doantotnghiep.bean.ResultBean;
 import com.manh.doantotnghiep.bean.entity.OrderDetailEntity;
 import com.manh.doantotnghiep.bean.entity.OrderEntity;
+import com.manh.doantotnghiep.bean.entity.ProductEntity;
 import com.manh.doantotnghiep.config.LogExecutionTime;
 import com.manh.doantotnghiep.dao.OrderDao;
 import com.manh.doantotnghiep.dao.OrderDetailDao;
 import com.manh.doantotnghiep.service.OrderService;
 import com.manh.doantotnghiep.utils.Constants;
+import com.manh.doantotnghiep.utils.DataUtil;
 
 /**
  * The Class OrderServiceImpl.
@@ -28,6 +35,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderDetailDao orderDetailDao;
+
+    private ObjectMapper mapper = new ObjectMapper();
 
     /**
      * Gets the all.
@@ -79,13 +88,12 @@ public class OrderServiceImpl implements OrderService {
      * @throws Exception the exception
      */
     @Override
-    public ResultBean addOrder(OrderEntity order, List<OrderDetailEntity> orderDetails) throws Exception {
-        orderDao.save(order);
-        for (OrderDetailEntity orderDetail : orderDetails) {
-            orderDetail.setOrder(order);
-            orderDetailDao.save(orderDetail);
-        }
-        return new ResultBean(Constants.STATUS_201, Constants.MSG_OK);
+    @Transactional(rollbackFor = Exception.class)
+    public ResultBean addOrder(String json) throws Exception {
+        OrderEntity order = updateOrderEntity(json);
+        order.getOrderDetails().forEach(res -> res.setOrder(order));
+        OrderEntity orderSave = orderDao.save(order);
+        return new ResultBean(orderSave, Constants.STATUS_201, Constants.MSG_OK);
     }
 
     /**
@@ -123,6 +131,14 @@ public class OrderServiceImpl implements OrderService {
         });
         orderDao.deleteById(id);
         return new ResultBean(Constants.STATUS_OK, Constants.MSG_OK);
+    }
+
+    private OrderEntity updateOrderEntity(String json) throws Exception {
+        return mapper.readValue(json, OrderEntity.class);
+    }
+
+    private OrderDetailEntity updateOrderDetailEntity(String json) throws Exception {
+        return mapper.readValue(json, OrderDetailEntity.class);
     }
 
 }

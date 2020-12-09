@@ -1,20 +1,21 @@
 package com.manh.doantotnghiep.service.Impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.manh.doantotnghiep.bean.ResultBean;
-import com.manh.doantotnghiep.bean.entity.ContactEntity;
-import com.manh.doantotnghiep.bean.entity.ProductCategoryEntity;
-import com.manh.doantotnghiep.config.LogExecutionTime;
-import com.manh.doantotnghiep.dao.ContactDao;
-import com.manh.doantotnghiep.service.ContactService;
-import com.manh.doantotnghiep.utils.Constants;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.manh.doantotnghiep.bean.ResultBean;
+import com.manh.doantotnghiep.bean.entity.ContactEntity;
+import com.manh.doantotnghiep.config.LogExecutionTime;
+import com.manh.doantotnghiep.dao.ContactDao;
+import com.manh.doantotnghiep.service.ContactService;
+import com.manh.doantotnghiep.utils.Constants;
+import com.manh.doantotnghiep.utils.DataUtil;
 
 @Service
 @LogExecutionTime
@@ -38,7 +39,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public ResultBean getById(Integer id) throws Exception {
         Optional<ContactEntity> contactOp = contactDao.findById(id);
-        if(!contactOp.isPresent()) {
+        if (!contactOp.isPresent()) {
             throw new Exception("Feedback by id " + id + " does not exist!");
         }
         return new ResultBean(contactOp.get(), Constants.STATUS_OK, Constants.MSG_OK);
@@ -60,20 +61,23 @@ public class ContactServiceImpl implements ContactService {
         return mapper.readValue(json, ContactEntity.class);
     }
 
-//    @Override
-////    public ResultBean updateFeedback(FeedbackEntity entity) throws Exception {
-////        Optional<FeedbackEntity> feedbackOp = feedbackDao.findById(entity.getId());
-////        if(!feedbackOp.isPresent()) {
-////            throw new Exception("Feedback by id " + entity.getId() + " does not exist!");
-////        }
-////        FeedbackEntity feedback = feedbackDao.save(entity);
-////        return new ResultBean(feedback, Constants.STATUS_OK, Constants.MSG_OK);
-////    }
+    @Override
+    public ResultBean updateContact(ContactEntity entity) throws Exception {
+        Optional<ContactEntity> feedbackOp = contactDao.findById(entity.getId());
+        if (!feedbackOp.isPresent()) {
+            throw new Exception("Feedback by id " + entity.getId() + " does not exist!");
+        }
+        String subject = "Cảm ơn bạn đã gửi phản hồi đến với chúng tôi!";
+
+        DataUtil.sendmail(entity.getEmail(), subject, entity.getContent());
+        ContactEntity feedback = contactDao.save(entity);
+        return new ResultBean(feedback, Constants.STATUS_OK, Constants.MSG_OK);
+    }
 
     @Override
     public ResultBean deleteById(Integer id) throws Exception {
         Optional<ContactEntity> contactOp = contactDao.findById(id);
-        if(!contactOp.isPresent()) {
+        if (!contactOp.isPresent()) {
             throw new Exception("Feedback by id " + id + " does not exist!");
         }
         contactDao.deleteById(id);

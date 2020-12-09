@@ -13,5 +13,13 @@ public class Constants {
     public static final String MSG_BAD_REQUEST = "400";
     public static final String MSG_OK = "Processed successfully";
     public static final String MSG_DELETE_OK = "Delete successfully";
+    
+    public static final String TYPE_PRODUCT = "product";
+    public static final String TYPE_BANNER = "banner";
+    public static final String TYPE_USER = "user";
+    
+    public static final String EMAIL = "manh3698@gmail.com";
+    public static final String PASSWORD = "manhlon11";      
 
+    public static final String rander = "abcd1234!@#$%^&*mhbyuoshDMhAESKOJQSD761823123";
 }

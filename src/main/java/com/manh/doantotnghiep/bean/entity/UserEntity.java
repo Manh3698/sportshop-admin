@@ -15,6 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -51,24 +54,24 @@ public class UserEntity extends CommonEntity implements Serializable {
     private Date birthday;
 
     @Column(name = "email")
-    @JsonProperty("email")
+    @Pattern(regexp = "^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@"
+            + "((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$", message = "Email not match")
     private String email;
 
     @Column(name = "phone_number")
+    @Length(max = 11, message = "Phone must have less than or equal 11 character")
     private String phoneNumber;
 
-    @Column(name = "user_name")
+    @Column(name = "user_name", nullable = false, unique = true)
+    @Length(max = 50, message = "Username has max-length = 50")
     private String username;
 
     @Column(name = "password")
+    @Pattern(regexp = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$", message = "Password must be 8 characters including 1 uppercase letter, 1 lowercase letter and numeric characters")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
-    )
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<RoleEntity> roles;
 
     public void setRoles(Set<RoleEntity> roles) {
@@ -78,6 +81,7 @@ public class UserEntity extends CommonEntity implements Serializable {
     public Set<RoleEntity> getRoles() {
         return roles;
     }
+
     public Integer getId() {
         return id;
     }

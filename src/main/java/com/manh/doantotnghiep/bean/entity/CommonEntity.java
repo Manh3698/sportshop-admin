@@ -21,24 +21,20 @@ public class CommonEntity implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @Column(name = "create_date")
-    @JsonProperty("create_date")
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
 
     @Column(name = "create_by", updatable = false)
-    @JsonProperty("create_by")
     @JsonIgnore
     private Integer createBy;
 
     @Column(name = "update_date")
-    @JsonProperty("update_date")
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateDate;
 
     @Column(name = "update_by", updatable = false)
-    @JsonProperty("update_by")
     @JsonIgnore
     private Integer updateBy;
 

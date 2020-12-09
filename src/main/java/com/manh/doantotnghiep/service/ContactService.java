@@ -31,7 +31,7 @@ public interface ContactService {
      * @return the result bean
      * @throws Exception the exception
      */
-//    public ResultBean updateContact(ContactEntity entity) throws Exception;
+    public ResultBean updateContact(ContactEntity entity) throws Exception;
 
     /**
      * Delete.

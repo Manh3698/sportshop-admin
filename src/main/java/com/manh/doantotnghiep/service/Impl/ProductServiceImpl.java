@@ -1,10 +1,11 @@
 package com.manh.doantotnghiep.service.Impl;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import com.manh.doantotnghiep.bean.ResultBean;
+import com.manh.doantotnghiep.bean.entity.ImageEntity;
 import com.manh.doantotnghiep.bean.entity.ProductEntity;
 import com.manh.doantotnghiep.config.LogExecutionTime;
+import com.manh.doantotnghiep.dao.ImageDao;
 import com.manh.doantotnghiep.dao.ProductDao;
 import com.manh.doantotnghiep.service.ImageStorageService;
 import com.manh.doantotnghiep.service.ProductService;
@@ -43,6 +46,9 @@ public class ProductServiceImpl implements ProductService {
     /** The image storage service. */
     @Autowired
     private ImageStorageService imageStorageService;
+
+    @Autowired
+    private ImageDao imageDao;
 
     /**
      * Gets the all.
@@ -128,18 +134,24 @@ public class ProductServiceImpl implements ProductService {
         log.info("##                                      ##");
         log.info("##########################################");
         log.info("### Start Add Product By Id ###");
-        List<String> filesName = new ArrayList<String>();
+        Set<ImageEntity> images = new HashSet<ImageEntity>();
+        ProductEntity productEntity = updateEntity(json);
+        Integer maxId = productDao.getMaxId();
+        maxId = !Objects.isNull(productDao.getMaxId()) ? maxId : 0;
         try {
             for (MultipartFile file : files) {
                 String fileName = imageStorageService.save(file);
-                filesName.add(fileName);
+                ImageEntity image = new ImageEntity();
+                image.setFileName(fileName);
+                image.setParentId(maxId + 1);
+                image.setType(Constants.TYPE_PRODUCT);
+                imageDao.save(image);
             }
         } catch (Exception e) {
             throw new IOException("Save file fail!");
         }
 
-        ProductEntity productEntity = updateEntity(json);
-        productEntity.setImages(String.join(",", filesName));
+        productEntity.setImages(images);
         productDao.save(productEntity);
         log.info("### End Add Product By Id ###");
         log.info("##########################################");
@@ -166,7 +178,7 @@ public class ProductServiceImpl implements ProductService {
         }
         ProductEntity productDb = productOp.get();
         ProductEntity productEntity = updateEntity(json);
-        if(Objects.isNull(files)) {
+        if (Objects.isNull(files)) {
             productEntity.setImages(productDb.getImages());
         }
         productDao.save(productEntity);

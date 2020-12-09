@@ -1,22 +1,26 @@
 package com.manh.doantotnghiep.service.Impl;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.manh.doantotnghiep.bean.entity.RoleEntity;
-import com.manh.doantotnghiep.dao.RoleDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.manh.doantotnghiep.bean.ResultBean;
+import com.manh.doantotnghiep.bean.entity.RoleEntity;
 import com.manh.doantotnghiep.bean.entity.UserEntity;
 import com.manh.doantotnghiep.config.LogExecutionTime;
+import com.manh.doantotnghiep.dao.RoleDao;
 import com.manh.doantotnghiep.dao.UserDao;
 import com.manh.doantotnghiep.service.UserService;
 import com.manh.doantotnghiep.utils.Constants;
-import org.springframework.transaction.annotation.Transactional;
+import com.manh.doantotnghiep.utils.DataUtil;
 
 /**
  * The Class UserServiceImpl.
@@ -99,7 +103,7 @@ public class UserServiceImpl implements UserService {
             throw new Exception("User by user name " + user.getUsername() + " have been exist!");
         }
 
-       Set<RoleEntity> roles = new HashSet<>(roleDao.findAllById(user.getRoles().stream().map(res -> res.getId()).collect(Collectors.toSet())));
+        Set<RoleEntity> roles = new HashSet<>(roleDao.findAllById(user.getRoles().stream().map(res -> res.getId()).collect(Collectors.toSet())));
         user.setRoles(roles);
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         UserEntity entity = userDao.save(user);
@@ -139,5 +143,14 @@ public class UserServiceImpl implements UserService {
         }
         UserEntity user = userOp.get();
         return new ResultBean(user, Constants.STATUS_OK, Constants.MSG_OK);
+    }
+
+
+    @Override
+    public ResultBean resetPass(String email) throws Exception {
+        String subject = "Mật khẩu mới";
+        String msg = "Mật khẩu mới của bạn đã được tạo tự động: " + DataUtil.randomPassword() +"<br>";
+        DataUtil.sendmail(email, subject, msg);
+        return new ResultBean(Constants.STATUS_OK, Constants.MSG_OK);
     }
 }

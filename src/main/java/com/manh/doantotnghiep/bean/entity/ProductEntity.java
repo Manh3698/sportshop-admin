@@ -2,9 +2,11 @@ package com.manh.doantotnghiep.bean.entity;
 
 import org.hibernate.annotations.Nationalized;
 
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Entity
 @Table(name = "products")
@@ -34,10 +36,6 @@ public class ProductEntity extends CommonEntity implements Serializable {
     @Column(name = "is_new")
     private Boolean isNew;
 
-    @Column(name = "images", columnDefinition = "nvarchar")
-    @Nationalized
-    private String images;
-
     @Column(name ="new_price")
     private BigDecimal newPrice = new BigDecimal(0);
 
@@ -62,9 +60,13 @@ public class ProductEntity extends CommonEntity implements Serializable {
     @Column(name ="description")
     private String description;
 
-    @Column(name ="content", columnDefinition = "nvarchar")
+    @Column(name ="content")
     @Nationalized
     private String content;
+    
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "parent_id")
+    private Set<ImageEntity> images;
 
     public Integer getId() {
         return id;
@@ -82,12 +84,16 @@ public class ProductEntity extends CommonEntity implements Serializable {
         this.name = name;
     }
 
-    public String getImages() {
+    public Set<ImageEntity> getImages() {
         return images;
     }
 
-    public void setImages(String images) {
+    public void setImages(Set<ImageEntity> images) {
         this.images = images;
+    }
+
+    public void setIsNew(Boolean isNew) {
+        this.isNew = isNew;
     }
 
     public BigDecimal getNewPrice() {

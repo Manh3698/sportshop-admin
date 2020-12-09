@@ -1,5 +1,7 @@
 package com.manh.doantotnghiep.bean.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,16 +9,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlTransient;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Set;
 
-@Data
+
 @Entity
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "orders")
 public class OrderEntity extends CommonEntity implements Serializable {
     /**
@@ -31,49 +32,41 @@ public class OrderEntity extends CommonEntity implements Serializable {
     private Integer id;
 
     @Column(name = "payment_method")
-    @JsonProperty("payment_method")
     private String paymentMethod;
 
     @Column(name = "payment_status")
-    @JsonProperty("payment_status")
     private String paymentStatus;
 
     @Column(name = "total_price")
-    @JsonProperty("total_price")
     private BigDecimal totalPrice = new BigDecimal(0);
 
     @Column(name = "status")
-    @JsonProperty("status")
     private Boolean status;
 
     @Column(name = "user_id")
-    @JsonProperty("user_id")
     private Integer userId;
 
     @Column(name = "user_address")
-    @JsonProperty("user_address")
     private String userAddress;
 
     @Column(name = "user_phone")
-    @JsonProperty("user_phone")
     private String userPhone;
 
     @Column(name = "user_email")
-    @JsonProperty("user_email")
     private String userEmail;
 
     @Column(name = "user_message")
-    @JsonProperty("user_message")
     private String userMessage;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Collection<OrderDetailEntity> orderDetails;
-
-    public Collection<OrderDetailEntity> getOrderDetails(){
-        return this.orderDetails;
+    
+   
+    public Collection<OrderDetailEntity> getOrderDetails() {
+        return orderDetails;
     }
 
-    public  void setOrderDetailEntity(Collection<OrderDetailEntity> orderDetails){
+    public void setOrderDetails(Collection<OrderDetailEntity> orderDetails) {
         this.orderDetails = orderDetails;
     }
 

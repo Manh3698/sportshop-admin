@@ -1,22 +1,34 @@
 package com.manh.doantotnghiep.controller;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.manh.doantotnghiep.bean.ResultBean;
-import com.manh.doantotnghiep.bean.entity.OrderDetailEntity;
 import com.manh.doantotnghiep.bean.entity.OrderEntity;
 import com.manh.doantotnghiep.config.LogExecutionTime;
 import com.manh.doantotnghiep.service.OrderDetailService;
 import com.manh.doantotnghiep.service.OrderService;
+import com.manh.doantotnghiep.service.PaypalService;
 import com.manh.doantotnghiep.utils.Constants;
+import com.manh.doantotnghiep.utils.DataUtil;
+import com.manh.doantotnghiep.utils.PaypalPaymentIntent;
+import com.manh.doantotnghiep.utils.PaypalPaymentMethod;
+import com.paypal.api.payments.Links;
+import com.paypal.api.payments.Payment;
+import com.paypal.base.rest.PayPalRESTException;
 
 /**
  * The Class OrderController.
@@ -33,6 +45,14 @@ public class OrderController {
     /** The order detail service. */
     @Autowired
     private OrderDetailService orderDetailService;
+
+    @Autowired
+    private PaypalService paypalService;
+
+    public static final String URL_PAYPAL_SUCCESS = "api/order/success";
+    public static final String URL_PAYPAL_CANCEL = "api/order/cancel";
+
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * Gets the all orders.
@@ -60,7 +80,7 @@ public class OrderController {
      * @return the product by id
      * @throws Exception the exception
      */
-    @PreAuthorize("hasRole('admin')")
+    //@PreAuthorize("hasRole('admin')")
     @RequestMapping(value = "/getOrderDetailById/{id}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<ResultBean> getOrderDetailByOrderId(@PathVariable Integer id) throws Exception {
         ResultBean resultBean = null;
@@ -124,12 +144,12 @@ public class OrderController {
      * @return the response entity
      * @throws Exception the exception
      */
-   // @PreAuthorize("hasRole('user') or hasRole('aQdmin')")
+    // @PreAuthorize("hasRole('user') or hasRole('aQdmin')")
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<ResultBean> addOrder(@RequestPart String order, @RequestPart String orderDetails) throws Exception {
+    public ResponseEntity<ResultBean> addOrder(@RequestBody String orderJson) throws Exception {
         ResultBean resultBean = null;
         try {
-            //resultBean = orderService.addOrder(order, orderDetails);
+            resultBean = orderService.addOrder(orderJson);
         } catch (Exception e) {
             resultBean = new ResultBean(Constants.STATUS_BAD_REQUEST, e.getMessage());
             return new ResponseEntity<ResultBean>(resultBean, HttpStatus.BAD_REQUEST);
@@ -176,5 +196,36 @@ public class OrderController {
         }
 
         return new ResponseEntity<ResultBean>(resultBean, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/payment", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<ResultBean> pay(HttpServletRequest request, @RequestParam("price") double price) {
+        String cancelUrl = DataUtil.getBaseURL(request) + "/" + URL_PAYPAL_CANCEL;
+        String successUrl = DataUtil.getBaseURL(request) + "/" + URL_PAYPAL_SUCCESS;
+        try {
+            Payment payment = paypalService.createPayment(price, "USD", PaypalPaymentMethod.paypal, PaypalPaymentIntent.sale, "payment description", cancelUrl,
+                    successUrl);
+            for (Links links : payment.getLinks()) {
+                if (links.getRel().equals("approval_url")) {
+                    return new ResponseEntity<ResultBean>(new ResultBean(links.getHref(), Constants.MSG_OK), HttpStatus.OK);
+                }
+            }
+        } catch (PayPalRESTException e) {
+            log.error(e.getMessage());
+        }
+        return new ResponseEntity<ResultBean>(new ResultBean(null, Constants.MSG_OK), HttpStatus.BAD_GATEWAY);
+    }
+
+    @RequestMapping(value = URL_PAYPAL_SUCCESS, method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
+        try {
+            Payment payment = paypalService.executePayment(paymentId, payerId);
+            if (payment.getState().equals("approved")) {
+                return "success";
+            }
+        } catch (PayPalRESTException e) {
+            log.error(e.getMessage());
+        }
+        return "redirect:/";
     }
 }
