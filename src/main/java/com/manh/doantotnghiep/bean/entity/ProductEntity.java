@@ -58,7 +58,7 @@ public class ProductEntity extends CommonEntity implements Serializable {
     private Integer quantity;
 
     @Column(name ="quantity_order")
-    private Integer quantityOrder;
+    private Integer quantityOrder = 0;
 
     @Column(name ="description")
     private String description;

@@ -163,4 +163,18 @@ public class ProductController {
 
         return new ResponseEntity<ResultBean>(resultBean, HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "/getHot", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<ResultBean> getHotProduct() throws Exception {
+        ResultBean resultBean = null;
+        try {
+            resultBean = productService.getHotProduct();
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            resultBean = new ResultBean(Constants.STATUS_BAD_REQUEST, e.getMessage());
+            return new ResponseEntity<ResultBean>(resultBean, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<ResultBean>(resultBean, HttpStatus.OK);
+    }
 }

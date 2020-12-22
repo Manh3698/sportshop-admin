@@ -237,4 +237,10 @@ public class ProductServiceImpl implements ProductService {
     private ProductEntity updateEntity(String json) throws Exception {
         return mapper.readValue(json, ProductEntity.class);
     }
+
+    @Override
+    public ResultBean getHotProduct() throws Exception {
+        List<ProductEntity> hotProducts = productDao.getHotProduct();
+        return new ResultBean(hotProducts, Constants.STATUS_OK, Constants.MSG_OK);
+    }
 }

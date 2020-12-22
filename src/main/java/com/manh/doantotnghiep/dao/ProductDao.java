@@ -13,4 +13,7 @@ public interface ProductDao extends JpaRepository<ProductEntity, Integer> {
     
     @Query(value = "SELECT MAX(p.id) FROM products p",  nativeQuery = true)
     Integer getMaxId();
+    
+    @Query(value = "SELECT * FROM products p ORDER BY p.quantity_order LIMIT 10",  nativeQuery = true)
+    List<ProductEntity> getHotProduct();
 }

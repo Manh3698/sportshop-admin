@@ -58,5 +58,7 @@ public interface ProductService {
      * @throws Exception the exception
      */
     public ResultBean updateProduct(String json, MultipartFile[] files) throws Exception;
+    
+    public ResultBean getHotProduct() throws Exception;
 
 }

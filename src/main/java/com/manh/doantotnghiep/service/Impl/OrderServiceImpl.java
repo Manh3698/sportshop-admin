@@ -18,6 +18,7 @@ import com.manh.doantotnghiep.bean.entity.ProductEntity;
 import com.manh.doantotnghiep.config.LogExecutionTime;
 import com.manh.doantotnghiep.dao.OrderDao;
 import com.manh.doantotnghiep.dao.OrderDetailDao;
+import com.manh.doantotnghiep.dao.ProductDao;
 import com.manh.doantotnghiep.service.OrderService;
 import com.manh.doantotnghiep.utils.Constants;
 import com.manh.doantotnghiep.utils.DataUtil;
@@ -32,6 +33,9 @@ public class OrderServiceImpl implements OrderService {
     /** The order dao. */
     @Autowired
     private OrderDao orderDao;
+    
+    @Autowired
+    private ProductDao productDao;
 
     @Autowired
     private OrderDetailDao orderDetailDao;
@@ -107,6 +111,13 @@ public class OrderServiceImpl implements OrderService {
     public ResultBean updateOrder(OrderEntity entity) throws Exception {
         if (!orderDao.existsById(entity.getId())) {
             throw new Exception("Order Id " + entity.getId() + " does not exist!");
+        }
+        if("Đang giao hàng".equals(entity.getStatus()) | "Đã giao hàng".equals(entity.getStatus())) {
+            for(OrderDetailEntity orderDetail : entity.getOrderDetails()) {
+                ProductEntity productOder = productDao.findById(orderDetail.getProductId()).get();
+                productOder.setQuantityOrder(productOder.getQuantityOrder() + 1);
+                productDao.save(productOder);
+            }
         }
 //        entity.setStatus("Giao hàng thành công");
         OrderEntity order = orderDao.save(entity);
