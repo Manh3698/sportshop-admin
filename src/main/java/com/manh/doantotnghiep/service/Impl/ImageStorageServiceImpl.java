@@ -1,5 +1,6 @@
 package com.manh.doantotnghiep.service.Impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,12 +28,19 @@ public class ImageStorageServiceImpl implements ImageStorageService {
 
     @Override
     public String save(MultipartFile file) throws IOException {
-        long currentTime = System.currentTimeMillis();
-        String fileName = file.getOriginalFilename().split("\\.")[0];
-        String extension = "." + file.getOriginalFilename().split("\\.")[1];
-        String fileStorePath = fileName  + extension;
-        Files.copy(file.getInputStream(), dir.resolve(fileStorePath));
-        return fileStorePath;
+//        long currentTime = System.currentTimeMillis();
+//        String fileName = file.getOriginalFilename().split("\\.")[0];
+        String fileName = file.getOriginalFilename();
+//        String extension = "." + file.getOriginalFilename().split("\\.")[1];
+//        String fileStorePath = fileName  + extension;
+//        Files.copy(file.getInputStream(), dir.resolve(fileStorePath));
+//        return fileStorePath;
+        File f = new File(dir.toString() + "/" + file.getOriginalFilename());
+        if(!f.exists()){
+            Files.copy(file.getInputStream(), dir.resolve(fileName));
+        }
+
+        return fileName;
     }
 
     @Override

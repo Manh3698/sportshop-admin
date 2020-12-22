@@ -57,6 +57,9 @@ public class ProductEntity extends CommonEntity implements Serializable {
     @Column(name ="quantity")
     private Integer quantity;
 
+    @Column(name ="quantity_order")
+    private Integer quantityOrder;
+
     @Column(name ="description")
     private String description;
 
@@ -190,5 +193,13 @@ public class ProductEntity extends CommonEntity implements Serializable {
 
     public void setNew(Boolean aNew) {
         isNew = aNew;
+    }
+
+    public Integer getQuantityOrder() {
+        return quantityOrder;
+    }
+
+    public void setQuantityOrder(Integer quantityOrder) {
+        this.quantityOrder = quantityOrder;
     }
 }

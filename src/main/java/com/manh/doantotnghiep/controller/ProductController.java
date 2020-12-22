@@ -105,7 +105,7 @@ public class ProductController {
      * @return the response entity
      * @throws Exception the exception
      */
-    @PreAuthorize("hasRole('admin')")
+//    @PreAuthorize("hasRole('admin')")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE, produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<ResultBean> deleteId(@PathVariable Integer id) throws Exception {
         ResultBean resultBean = null;
@@ -151,7 +151,7 @@ public class ProductController {
      */
 //    @PreAuthorize("hasRole('admin')")
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<ResultBean> update(@RequestParam("files") MultipartFile[] files, @RequestParam("json") String json) throws Exception {
+    public ResponseEntity<ResultBean> updateProduct(@RequestParam("files") MultipartFile[] files, @RequestParam("json") String json) throws Exception {
         ResultBean resultBean = null;
         try {
             resultBean = productService.updateProduct(json, files);

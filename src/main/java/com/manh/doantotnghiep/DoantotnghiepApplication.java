@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import com.manh.doantotnghiep.service.ImageStorageService;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @EnableConfigurationProperties

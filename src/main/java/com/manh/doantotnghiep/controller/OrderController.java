@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -101,7 +102,7 @@ public class OrderController {
      * @return the products by cate id
      * @throws Exception the exception
      */
-    @PreAuthorize("hasRole('admin') or hasRole('user')")
+//    @PreAuthorize("hasRole('admin') or hasRole('user')")
     @RequestMapping(value = "/getByUserId/{userId}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<ResultBean> getOrdersByUserId(@PathVariable Integer userId) throws Exception {
         ResultBean resultBean = null;
@@ -122,7 +123,7 @@ public class OrderController {
      * @return the response entity
      * @throws Exception the exception
      */
-    @PreAuthorize("hasRole('admin')")
+//    @PreAuthorize("hasRole('admin')")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE, produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<ResultBean> deleteById(@PathVariable Integer id) throws Exception {
         ResultBean resultBean = null;
@@ -165,12 +166,24 @@ public class OrderController {
      * @return the response entity
      * @throws Exception the exception
      */
-    @PreAuthorize("hasRole('admin')")
-    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<ResultBean> update(@RequestBody OrderEntity json) throws Exception {
+//    @PreAuthorize("hasRole('admin')")
+    @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<ResultBean> updateOrder(@RequestBody OrderEntity json) throws Exception {
         ResultBean resultBean = null;
         try {
             resultBean = orderService.updateOrder(json);
+        } catch (Exception e) {
+            resultBean = new ResultBean(Constants.STATUS_BAD_REQUEST, e.getMessage());
+        }
+
+        return new ResponseEntity<ResultBean>(resultBean, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getOrderById/{id}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<ResultBean> getOrderById(@PathVariable Integer id) throws Exception {
+        ResultBean resultBean = null;
+        try {
+            resultBean = orderService.getOrderById(id);
         } catch (Exception e) {
             resultBean = new ResultBean(Constants.STATUS_BAD_REQUEST, e.getMessage());
         }
@@ -185,7 +198,8 @@ public class OrderController {
      * @return the response entity
      * @throws Exception the exception
      */
-    @PreAuthorize("hasRole('admin')")
+//    @PreAuthorize("hasRole('admin')")
+//    @Secured("admin")
     @RequestMapping(value = "/deleteOrderDetail/{id}", method = RequestMethod.DELETE, produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<ResultBean> deleteOrderDetail(@RequestParam Integer id) throws Exception {
         ResultBean resultBean = null;

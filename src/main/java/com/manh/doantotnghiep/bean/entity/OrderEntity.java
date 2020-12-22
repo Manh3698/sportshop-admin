@@ -41,10 +41,13 @@ public class OrderEntity extends CommonEntity implements Serializable {
     private BigDecimal totalPrice = new BigDecimal(0);
 
     @Column(name = "status")
-    private Boolean status;
+    private String status;
 
     @Column(name = "user_id")
     private Integer userId;
+
+    @Column(name = "username")
+    private String userName;
 
     @Column(name = "user_address")
     private String userAddress;
@@ -102,11 +105,11 @@ public class OrderEntity extends CommonEntity implements Serializable {
         this.totalPrice = totalPrice;
     }
 
-    public Boolean getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -148,5 +151,13 @@ public class OrderEntity extends CommonEntity implements Serializable {
 
     public void setUserMessage(String userMessage) {
         this.userMessage = userMessage;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

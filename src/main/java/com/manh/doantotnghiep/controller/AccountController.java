@@ -49,7 +49,7 @@ public class AccountController {
         }
         return new ResponseEntity<ResultBean>(resultBean, HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('user') or hasRole('admin')")
+//    @PreAuthorize("hasRole('user') or hasRole('admin')")
     @RequestMapping(value = "/getUserById/{id}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<ResultBean> getUserById(@PathVariable Integer id) throws Exception {
         ResultBean resultBean = null;
@@ -61,7 +61,7 @@ public class AccountController {
         }
         return new ResponseEntity<ResultBean>(resultBean, HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('user')")
+//    @PreAuthorize("hasRole('user')")
     @RequestMapping(value = "/getUserByUsername", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<ResultBean> getUserById(@RequestParam String username) throws Exception {
         ResultBean resultBean = null;
@@ -73,7 +73,7 @@ public class AccountController {
         }
         return new ResponseEntity<ResultBean>(resultBean, HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('admin')")
+//    @PreAuthorize("hasRole('admin')")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE, produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<ResultBean> deleteUserById(@PathVariable Integer id) throws Exception {
         ResultBean resultBean = null;
@@ -85,7 +85,7 @@ public class AccountController {
         }
         return new ResponseEntity<ResultBean>(resultBean, HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('user')")
+//    @PreAuthorize("hasRole('user')")
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<ResultBean> updateUser(@RequestBody UserEntity user) throws Exception {
         ResultBean resultBean = null;
@@ -139,4 +139,5 @@ public class AccountController {
         }
         return new ResponseEntity<ResultBean>(resultBean, HttpStatus.OK);
     }
+
 }

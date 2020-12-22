@@ -10,6 +10,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,6 +60,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public ResultBean getAll() throws Exception {
+//        Authentication authe = SecurityContextHolder.getContext().getAuthentication();
         log.info("##                                      ##");
         log.info("##########################################");
         log.info("### Start Get List Products ###");
@@ -137,7 +140,7 @@ public class ProductServiceImpl implements ProductService {
         Set<ImageEntity> images = new HashSet<ImageEntity>();
         ProductEntity productEntity = updateEntity(json);
         Integer maxId = productDao.getMaxId();
-        maxId = !Objects.isNull(productDao.getMaxId()) ? maxId : 0;
+        maxId = !Objects.isNull(maxId) ? maxId : 0;
         try {
             for (MultipartFile file : files) {
                 String fileName = imageStorageService.save(file);
@@ -165,6 +168,27 @@ public class ProductServiceImpl implements ProductService {
      * @return the result bean
      * @throws Exception the exception
      */
+//    @Override
+//    public ResultBean updateProduct(String json, MultipartFile[] files) throws Exception {
+//        log.info("##                                      ##");
+//        log.info("##########################################");
+//        log.info("### Start Update Product By Id ###");
+//        JsonObject jsonObj = DataUtil.getJsonObject(json);
+//        Integer id = jsonObj.get("id").getAsInt();
+//        Optional<ProductEntity> productOp = productDao.findById(id);
+//        if (!productOp.isPresent()) {
+//            throw new Exception("Product Id " + id + " does not exist!");
+//        }
+//        ProductEntity productDb = productOp.get();
+//        ProductEntity productEntity = updateEntity(json);
+//        if (Objects.isNull(files)) {
+//            productEntity.setImages(productDb.getImages());
+//        }
+//        productDao.save(productEntity);
+//        log.info("### End Update Product By Id ###");
+//        log.info("##########################################");
+//        return new ResultBean(Constants.STATUS_OK, Constants.MSG_OK);
+//    }
     @Override
     public ResultBean updateProduct(String json, MultipartFile[] files) throws Exception {
         log.info("##                                      ##");
@@ -178,9 +202,25 @@ public class ProductServiceImpl implements ProductService {
         }
         ProductEntity productDb = productOp.get();
         ProductEntity productEntity = updateEntity(json);
+        productDb.setImages(null);
         if (Objects.isNull(files)) {
             productEntity.setImages(productDb.getImages());
         }
+        imageDao.deleteImageByTypeAndParentId(Constants.TYPE_PRODUCT, id);
+        try {
+            for (MultipartFile file : files) {
+                String fileName = imageStorageService.save(file);
+                ImageEntity image = new ImageEntity();
+                image.setFileName(fileName);
+                image.setParentId(id);
+                image.setType(Constants.TYPE_PRODUCT);
+                imageDao.save(image);
+            }
+        } catch (Exception e) {
+            throw new IOException("Save file fail!");
+        }
+
+        //productEntity.setImages(new HashSet<>(listImg));
         productDao.save(productEntity);
         log.info("### End Update Product By Id ###");
         log.info("##########################################");

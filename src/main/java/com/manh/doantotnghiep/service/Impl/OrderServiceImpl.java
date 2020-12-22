@@ -83,7 +83,7 @@ public class OrderServiceImpl implements OrderService {
     /**
      * Adds the order.
      *
-     * @param entity the entity
+     * @param json the entity
      * @return the result bean
      * @throws Exception the exception
      */
@@ -108,7 +108,7 @@ public class OrderServiceImpl implements OrderService {
         if (!orderDao.existsById(entity.getId())) {
             throw new Exception("Order Id " + entity.getId() + " does not exist!");
         }
-        entity.setStatus(true);
+//        entity.setStatus("Giao hàng thành công");
         OrderEntity order = orderDao.save(entity);
         return new ResultBean(order, Constants.STATUS_OK, Constants.MSG_OK);
     }

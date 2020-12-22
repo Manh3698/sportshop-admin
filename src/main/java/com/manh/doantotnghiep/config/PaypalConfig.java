@@ -14,9 +14,9 @@ import com.paypal.base.rest.PayPalRESTException;
 @Configuration
 public class PaypalConfig {
 
-        @Value("${paypal.client.app}")
+        @Value("ATIE_g3-FXFpXi8oGUVn3FAScbRSGrvC05hGDmkfcGgRl9c3DGAhGF-B4wJnuuoHqFsBmSa4k79ipXMU")
     private String clientId;
-        @Value("${paypal.client.secret}")
+        @Value("EDsqlJRTTvWonANCWOc2wtPvdQo-OAIEqTJbDq3HR1z9vu41PQj0W7dahoEhmd_fkvovE2JoSOnhVJx9")
     private String clientSecret;
         @Value("${paypal.mode}")
     private String mode;
